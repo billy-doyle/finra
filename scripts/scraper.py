@@ -26,6 +26,18 @@ def retrieve(link):
     df['Q'] = df['Market'].str.contains('Q')
     
     df.drop(columns=['Market'], inplace=True)
+    columns = {
+        'Date': 'date',
+        'Symbol': 'symbol',
+        'ShortVolume': 'short_volume',
+        'ShortExemptVolume': 'short_exempt_volume',
+        'TotalVolume': 'total_volume',
+        'B': 'b',
+        'D': 'd',
+        'N': 'n',
+        'Q': 'q'
+        }
+    df.rename(columns=columns, inplace=True)
     
     return df
 
@@ -39,6 +51,8 @@ def main(date):
         df = retrieve(f'http://regsho.finra.org/CNMSshvol{sd}.txt')
         # TODO: upload to sql db
         # upload(df)
+
+        return df
 
 
 if __name__ == '__main__':

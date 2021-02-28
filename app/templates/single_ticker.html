@@ -36,16 +36,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>foobar</title>
+    <title>FINRA</title>
 
 </head>
 <body>
 
 {% if img %}
-<img src="data:image/png;base64,{{ img }}">
+<center>
+    <img src="data:image/png;base64,{{ img }}">
+</center>
+
 {% endif %}
 
-{{ table|safe }}
+<center>{{ table|safe }}</center>
+
 
 </body>
 </html>
