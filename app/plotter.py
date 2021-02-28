@@ -20,7 +20,7 @@ def plot(df, ticker):
     ax = fig.subplots()
     ax.title.set_text(f'{ticker.upper()}')
     ax.set_ylabel('Short Volume')
-    ax.plot(df['Date'].tolist(), df['Short Volume'].tolist())
+    ax.plot(df['date'].tolist(), df['short_volume'].tolist())
     ax.set_xticklabels(ax.get_xticks(), rotation=45)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 

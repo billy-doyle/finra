@@ -14,21 +14,20 @@ def hiscores():
 
     date = request.args.get('date')
     if date is None:
-        query = "(SELECT MAX(\"Date\")::date FROM cnms)"
+        query = "(SELECT MAX(date) FROM cnms)"
         date = pd.read_sql(query, engine)['max'][0]
     
     query = f"""
     SELECT 
-    "Date",
-    "Symbol", 
-    "ShortVolume"::decimal as "Short Volume",
-    "TotalVolume"::decimal as "Total Volume",
-    ROUND("ShortVolume"::decimal 
-        / NULLIF("TotalVolume"::decimal, 0), 3) as "Volume Ratio"
+    date,
+    symbol, 
+    short_volume,
+    total_volume,
+    ROUND((short_volume / NULLIF(total_volume, 0))::numeric, 2) as "Volume Ratio"
     FROM cnms
-    WHERE "Date" = '{date}'
+    WHERE date = '{date}'
 
-    ORDER BY 2 desc
+    ORDER BY 3 desc
     LIMIT 25
     """
 
@@ -46,22 +45,16 @@ def get_ticker(ticker):
     if start_date is None or end_date is None:
         s = ''
     else:
-        s = f"""AND "Date" BETWEEN '{start_date}' AND '{end_date}'"""
+        s = f"""AND date BETWEEN '{start_date}' AND '{end_date}'"""
 
     # TODO: Sanitize for SQL injections
     query = f"""
     SELECT 
-    "Date",
-    "Symbol",
-    "ShortVolume"::decimal as "Short Volume",
-    "ShortExemptVolume"::decimal as "Short Exempt Volume",
-    "TotalVolume"::decimal as "Total Volume",
-    "B", "D", "N", "Q"
-
+    *
     FROM cnms 
-    WHERE "Symbol" = '{ticker.upper()}' 
+    WHERE symbol = '{ticker.upper()}' 
     {s} 
-    ORDER BY "Date" DESC 
+    ORDER BY date DESC 
     """
 
     pd.options.display.float_format = '{:,}'.format
