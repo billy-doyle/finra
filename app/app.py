@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from flask import Flask, render_template, request
 
 import plotter
+from arg_factory import query_builder
 
 app = Flask(__name__)
 engine = create_engine('postgresql://postgres:password@127.0.0.1:5432/local')
@@ -39,27 +40,11 @@ def hiscores():
 @app.route('/<ticker>')
 def get_ticker(ticker):
 
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
-
-    if start_date is None or end_date is None:
-        s = ''
-    else:
-        s = f"""AND date BETWEEN '{start_date}' AND '{end_date}'"""
-
-    # TODO: Sanitize for SQL injections
-    query = f"""
-    SELECT 
-    *
-    FROM cnms 
-    WHERE symbol = '{ticker.upper()}' 
-    {s} 
-    ORDER BY date DESC 
-    """
+    query, col = query_builder(ticker, request.args)
 
     pd.options.display.float_format = '{:,}'.format
     df = pd.read_sql(query, engine)
-    img = plotter.plot(df, ticker)
+    img = plotter.plot(df, ticker, col)
 
     return render_template('single_ticker.html',  table=df.to_html(index=False), ticker=ticker, img=img)
 

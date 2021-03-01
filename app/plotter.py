@@ -14,13 +14,15 @@ rcParams.update({'figure.autolayout': True})
 register_matplotlib_converters()
 
 
-def plot(df, ticker):
+def plot(df, ticker, column):
+
+    df = df.sort_values(by=['date'])
 
     fig = Figure()
     ax = fig.subplots()
     ax.title.set_text(f'{ticker.upper()}')
-    ax.set_ylabel('Short Volume')
-    ax.plot(df['date'].tolist(), df['short_volume'].tolist())
+    ax.set_ylabel(column)
+    ax.plot(df['date'].tolist(), df[column].tolist())
     ax.set_xticklabels(ax.get_xticks(), rotation=45)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 
