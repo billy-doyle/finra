@@ -4,6 +4,10 @@ import pandas as pd
 import numpy as np
 import requests
 import pandas_market_calendars as mcal
+import psycopg2
+from sqlalchemy import create_engine
+
+engine = create_engine(f'postgresql://postgres:password@127.0.0.1:5432/local')
 
 nyse = mcal.get_calendar('NYSE')
 
@@ -41,16 +45,14 @@ def retrieve(link):
     
     return df
 
-# TODO: upload to sql db
-# def upload(df):
-#     df.to_sql('cnms', engine, index=False, if_exists='append', method='multi')
+def upload(df):
+    df.to_sql('cnms', engine, index=False, if_exists='append', method='multi')
 
 def main(date):
     if len(nyse.valid_days(date, date)) != 0:
         sd = date.strftime("%Y%m%d")
         df = retrieve(f'http://regsho.finra.org/CNMSshvol{sd}.txt')
-        # TODO: upload to sql db
-        # upload(df)
+        upload(df)
 
         return df
 
