@@ -34,6 +34,8 @@ def handle_invalid_usage(error):
 @app.route('/')
 def hiscores():
 
+    # TODO include in jsonschema too
+
     date = request.args.get('date')
     if date is None:
         query = "(SELECT MAX(date) FROM cnms)"
