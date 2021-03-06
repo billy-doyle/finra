@@ -47,11 +47,11 @@ def query_builder(ticker, d):
     check_json(d, clst, olst)
 
     start_date, end_date = d.get('start_date'), d.get('end_date')
-    if start_date is not None and end_date is not None:
+    if (start_date is not None) and (end_date is not None):
         period = f"AND date BETWEEN '{start_date}' AND '{end_date}'"
-    if start_date is not None and end_date is None:
+    elif (start_date is not None) and (end_date is None):
         period = f"AND date >= '{start_date}'"
-    if start_date is None and end_date is not None:
+    elif (start_date is None) and (end_date is not None):
         period = f"AND date <= '{end_date}'"
     else:
         period = ''

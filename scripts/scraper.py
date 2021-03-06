@@ -58,4 +58,13 @@ def main(date):
 
 
 if __name__ == '__main__':
-    main(pd.Timestamp.today())
+
+    l = []
+    date = pd.read_sql('select max(date) from cnms', engine)['max'][0]
+    while pd.Timestamp(date) <= pd.Timestamp.today().date():
+        # print(date)
+        date = pd.Timestamp(date) + pd.Timedelta(days=1)
+        l.append(date)
+
+    for date in l:
+        main(date)
